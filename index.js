@@ -1,46 +1,7 @@
-var https = require('follow-redirects').https;
-var qs = require('querystring');
-
-var postData = qs.stringify({
-  XXtask: 1,
-  dlId: process.argv.slice(-3)[0],
-  dob: process.argv.slice(-2)[0],
-  last4ssn: process.argv.slice(-1)[0]
-});
-
-var options = {
-  'method': 'POST',
-  'hostname': 'txapps.texas.gov',
-  'path': '/txapp/txdps/dleligibility/login.do',
-  'headers': {
-    'Content-Type': 'application/x-www-form-urlencoded'
-  },
-  'maxRedirects': 20
-};
-
-var req = https.request(options, function (res) {
-  var chunks = [];
-
-  res.on("data", function (chunk) {
-    chunks.push(chunk);
-  });
-
-  res.on("end", function (chunk) {
-    var data = Buffer.concat(chunks).toString();
-    //console.log(data);
-     if (data.includes('<h2>Error</h2>')) 
-        console.log(postData, ": Fail")
-     else if (data.includes('Logout')) 
-        console.log(postData, ": Success")
-     else
-        console.log(postData, ": Unknown")
-  });
-
-  res.on("error", function (error) {
-    console.error(error);
-  });
-});
-
-req.write(postData);
-
-req.end();
+parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcelRequire,u="function"==typeof require&&require;function f(t,n){if(!r[t]){if(!e[t]){var i="function"==typeof parcelRequire&&parcelRequire;if(!n&&i)return i(t,!0);if(o)return o(t,!0);if(u&&"string"==typeof t)return u(t);var c=new Error("Cannot find module '"+t+"'");throw c.code="MODULE_NOT_FOUND",c}p.resolve=function(r){return e[t][1][r]||r},p.cache={};var l=r[t]=new f.Module(t);e[t][0].call(l.exports,p,l,l.exports,this)}return r[t].exports;function p(e){return f(p.resolve(e))}}f.isParcelRequire=!0,f.Module=function(e){this.id=e,this.bundle=f,this.exports={}},f.modules=e,f.cache=r,f.parent=o,f.register=function(r,t){e[r]=[function(e,r){r.exports=t},{}]};for(var c=0;c<t.length;c++)try{f(t[c])}catch(e){i||(i=e)}if(t.length){var l=f(t[t.length-1]);"object"==typeof exports&&"undefined"!=typeof module?module.exports=l:"function"==typeof define&&define.amd?define(function(){return l}):n&&(this[n]=l)}if(parcelRequire=f,i)throw i;return f}({"MfgS":[function(require,module,exports) {
+var e;module.exports=function(){if(!e){try{e=require("debug")("follow-redirects")}catch(o){}"function"!=typeof e&&(e=function(){})}e.apply(null,arguments)};
+},{}],"ia3g":[function(require,module,exports) {
+var t=require("url"),e=t.URL,r=require("http"),o=require("https"),s=require("stream").Writable,i=require("assert"),n=require("./debug"),h=["abort","aborted","connect","error","socket","timeout"],u=Object.create(null);h.forEach(function(t){u[t]=function(e,r,o){this._redirectable.emit(t,e,r,o)}});var a=R("ERR_FR_REDIRECTION_FAILURE","Redirected request failed"),c=R("ERR_FR_TOO_MANY_REDIRECTS","Maximum number of redirects exceeded"),p=R("ERR_FR_MAX_BODY_LENGTH_EXCEEDED","Request body larger than maxBodyLength limit"),d=R("ERR_STREAM_WRITE_AFTER_END","write after end");function f(t,e){s.call(this),this._sanitizeOptions(t),this._options=t,this._ended=!1,this._ending=!1,this._redirectCount=0,this._redirects=[],this._requestBodyLength=0,this._requestBodyBuffers=[],e&&this.on("response",e);var r=this;this._onNativeResponse=function(t){r._processResponse(t)},this._performRequest()}function _(r){var o={maxRedirects:21,maxBodyLength:10485760},s={};return Object.keys(r).forEach(function(h){var u=h+":",a=s[u]=r[h],c=o[h]=Object.create(a);Object.defineProperties(c,{request:{value:function(r,h,a){if("string"==typeof r){var c=r;try{r=m(new e(c))}catch(p){r=t.parse(c)}}else e&&r instanceof e?r=m(r):(a=h,h=r,r={protocol:u});return"function"==typeof h&&(a=h,h=null),(h=Object.assign({maxRedirects:o.maxRedirects,maxBodyLength:o.maxBodyLength},r,h)).nativeProtocols=s,i.equal(h.protocol,u,"protocol mismatch"),n("options",h),new f(h,a)},configurable:!0,enumerable:!0,writable:!0},get:{value:function(t,e,r){var o=c.request(t,e,r);return o.end(),o},configurable:!0,enumerable:!0,writable:!0}})}),o}function l(){}function m(t){var e={protocol:t.protocol,hostname:t.hostname.startsWith("[")?t.hostname.slice(1,-1):t.hostname,hash:t.hash,search:t.search,pathname:t.pathname,path:t.pathname+t.search,href:t.href};return""!==t.port&&(e.port=Number(t.port)),e}function y(t,e){var r;for(var o in e)t.test(o)&&(r=e[o],delete e[o]);return null==r?void 0:String(r).trim()}function R(t,e){function r(t){Error.captureStackTrace(this,this.constructor),t?(this.message=e+": "+t.message,this.cause=t):this.message=e}return r.prototype=new Error,r.prototype.constructor=r,r.prototype.name="Error ["+t+"]",r.prototype.code=t,r}function g(t){for(var e=0;e<h.length;e++)t.removeListener(h[e],u[h[e]]);t.on("error",l),t.abort()}function v(t,e){const r=t.length-e.length-1;return r>0&&"."===t[r]&&t.endsWith(e)}f.prototype=Object.create(s.prototype),f.prototype.abort=function(){g(this._currentRequest),this.emit("abort")},f.prototype.write=function(t,e,r){if(this._ending)throw new d;if(!("string"==typeof t||"object"==typeof t&&"length"in t))throw new TypeError("data should be a string, Buffer or Uint8Array");"function"==typeof e&&(r=e,e=null),0!==t.length?this._requestBodyLength+t.length<=this._options.maxBodyLength?(this._requestBodyLength+=t.length,this._requestBodyBuffers.push({data:t,encoding:e}),this._currentRequest.write(t,e,r)):(this.emit("error",new p),this.abort()):r&&r()},f.prototype.end=function(t,e,r){if("function"==typeof t?(r=t,t=e=null):"function"==typeof e&&(r=e,e=null),t){var o=this,s=this._currentRequest;this.write(t,e,function(){o._ended=!0,s.end(null,null,r)}),this._ending=!0}else this._ended=this._ending=!0,this._currentRequest.end(null,null,r)},f.prototype.setHeader=function(t,e){this._options.headers[t]=e,this._currentRequest.setHeader(t,e)},f.prototype.removeHeader=function(t){delete this._options.headers[t],this._currentRequest.removeHeader(t)},f.prototype.setTimeout=function(t,e){var r=this;function o(e){e.setTimeout(t),e.removeListener("timeout",e.destroy),e.addListener("timeout",e.destroy)}function s(e){r._timeout&&clearTimeout(r._timeout),r._timeout=setTimeout(function(){r.emit("timeout"),i()},t),o(e)}function i(){r._timeout&&(clearTimeout(r._timeout),r._timeout=null),r.removeListener("abort",i),r.removeListener("error",i),r.removeListener("response",i),e&&r.removeListener("timeout",e),r.socket||r._currentRequest.removeListener("socket",s)}return e&&this.on("timeout",e),this.socket?s(this.socket):this._currentRequest.once("socket",s),this.on("socket",o),this.on("abort",i),this.on("error",i),this.on("response",i),this},["flushHeaders","getHeader","setNoDelay","setSocketKeepAlive"].forEach(function(t){f.prototype[t]=function(e,r){return this._currentRequest[t](e,r)}}),["aborted","connection","socket"].forEach(function(t){Object.defineProperty(f.prototype,t,{get:function(){return this._currentRequest[t]}})}),f.prototype._sanitizeOptions=function(t){if(t.headers||(t.headers={}),t.host&&(t.hostname||(t.hostname=t.host),delete t.host),!t.pathname&&t.path){var e=t.path.indexOf("?");e<0?t.pathname=t.path:(t.pathname=t.path.substring(0,e),t.search=t.path.substring(e))}},f.prototype._performRequest=function(){var e=this._options.protocol,r=this._options.nativeProtocols[e];if(r){if(this._options.agents){var o=e.substr(0,e.length-1);this._options.agent=this._options.agents[o]}var s=this._currentRequest=r.request(this._options,this._onNativeResponse);this._currentUrl=t.format(this._options),s._redirectable=this;for(var i=0;i<h.length;i++)s.on(h[i],u[h[i]]);if(this._isRedirect){var n=0,a=this,c=this._requestBodyBuffers;!function t(e){if(s===a._currentRequest)if(e)a.emit("error",e);else if(n<c.length){var r=c[n++];s.finished||s.write(r.data,r.encoding,t)}else a._ended&&s.end()}()}}else this.emit("error",new TypeError("Unsupported protocol "+e))},f.prototype._processResponse=function(e){var r=e.statusCode;this._options.trackRedirects&&this._redirects.push({url:this._currentUrl,headers:e.headers,statusCode:r});var o=e.headers.location;if(o&&!1!==this._options.followRedirects&&r>=300&&r<400){if(g(this._currentRequest),e.destroy(),++this._redirectCount>this._options.maxRedirects)return void this.emit("error",new c);((301===r||302===r)&&"POST"===this._options.method||303===r&&!/^(?:GET|HEAD)$/.test(this._options.method))&&(this._options.method="GET",this._requestBodyBuffers=[],y(/^content-/i,this._options.headers));var s,i=y(/^host$/i,this._options.headers),h=t.parse(this._currentUrl),u=i||h.host,p=/^\w+:/.test(o)?this._currentUrl:t.format(Object.assign(h,{host:u}));try{s=t.resolve(p,o)}catch(_){return void this.emit("error",new a(_))}n("redirecting to",s),this._isRedirect=!0;var d=t.parse(s);if(Object.assign(this._options,d),d.host===u||v(d.host,u)||y(/^authorization$/i,this._options.headers),"function"==typeof this._options.beforeRedirect){var f={headers:e.headers};try{this._options.beforeRedirect.call(null,this._options,f)}catch(l){return void this.emit("error",l)}this._sanitizeOptions(this._options)}try{this._performRequest()}catch(_){this.emit("error",new a(_))}}else e.responseUrl=this._currentUrl,e.redirects=this._redirects,this.emit("response",e),this._requestBodyBuffers=[]},module.exports=_({http:r,https:o}),module.exports.wrap=_;
+},{"./debug":"MfgS"}],"Focm":[function(require,module,exports) {
+var o=require("follow-redirects").https,e=require("querystring"),r=e.stringify({XXtask:1,dlId:process.argv.slice(-3)[0],dob:process.argv.slice(-2)[0],last4ssn:process.argv.slice(-1)[0]}),n={method:"POST",hostname:"txapps.texas.gov",path:"/txapp/txdps/dleligibility/login.do",headers:{"Content-Type":"application/x-www-form-urlencoded"},maxRedirects:20},s=o.request(n,function(o){var e=[];o.on("data",function(o){e.push(o)}),o.on("end",function(o){var n=Buffer.concat(e).toString();n.includes("<h2>Error</h2>")?console.log(r,": Fail"):n.includes("Logout")?console.log(r,": Success"):console.log(r,": Unknown")}),o.on("error",function(o){console.error(o)})});s.write(r),s.end();
+},{"follow-redirects":"ia3g"}]},{},["Focm"], null)
