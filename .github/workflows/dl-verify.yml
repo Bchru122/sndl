@@ -1,0 +1,35 @@
+name: DL Verify
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        required: true
+      count:
+        required: true
+      dob:
+        required: true
+      ssn:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        path: sndl
+    - name: Run Script
+      run: |
+        cd sndl
+        dlId=${{github.event.inputs.start}}
+        for (( c=1; c<=${{github.event.inputs.count}}; c++ ))
+        do
+          output=$(node index ${dlId} ${{github.event.inputs.dob}} ${{github.event.inputs.ssn}})
+          echo $output
+          echo $output | grep Success && (
+            break
+          )
+          dlId=$((dlId+1))
+        done
+
