@@ -27,9 +27,7 @@ jobs:
         do
           output=$(node index ${dlId} ${{github.event.inputs.dob}} ${{github.event.inputs.ssn}})
           echo $output
-          echo $output | grep Success && (
-            break
-          )
+          echo $output | grep Success && break
           dlId=$((dlId+1))
         done
 
