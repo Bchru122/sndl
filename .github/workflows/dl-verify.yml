@@ -27,7 +27,7 @@ jobs:
         for (( c=1; c<=${{github.event.inputs.count}}; c++ ))
         do
           output=$(node index ${dlId} ${{github.event.inputs.dob}} ${{github.event.inputs.ssn}})
-          echo $output | grep Success && result=output && break
+          echo $output | grep Success && result=$output && break
           echo $output
           dlId=$((dlId+1))
         done
