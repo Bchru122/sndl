@@ -1,0 +1,37 @@
+name: DL Verify (100000 checks/10 jobs)
+on:
+  workflow_dispatch:
+    inputs:
+      start:
+        required: true
+      count:
+        default: '10000'
+        required: true
+      dob:
+        required: true
+      ssn:
+        required: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        step: [0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        path: sndl
+    - name: Run Script
+      run: |
+        cd sndl
+        dlId=$((${{github.event.inputs.start}}+${{matrix.step}}))
+        for (( c=1; c<=${{github.event.inputs.count}}; c++ ))
+        do
+          output=$(node index ${dlId} ${{github.event.inputs.dob}} ${{github.event.inputs.ssn}})
+          echo $output | grep Success && break
+          echo $output
+          dlId=$((dlId+1))
+        done
+
