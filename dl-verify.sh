@@ -10,6 +10,7 @@ do
       if cat $markfile | grep ${dlId}; then
         echo "Skipping ${dlId}..."
         dlId=$((dlId+1000))
+        count=$((count-1000))
         continue
       fi
     fi
