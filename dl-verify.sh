@@ -1,28 +1,16 @@
 #!/bin/bash
 
-markfile0=${ssn}_${dlId:0:-6}.txt
-wget https://bitbucket.org/swang362/sndl/downloads/${markfile0} || echo "Markfile $markfile0 does not exist."
-markfile=${ssn}_${dlId}.txt
-wget https://bitbucket.org/swang362/sndl/downloads/${markfile} || echo "Markfile $markfile does not exist."
+prefix=${dlId:0:-6}
 
 for (( c=1; c<=${count:-10000}; c++ ))
 do
   if [[ "${dlId}" == *000 ]]; then
-    if [[ -f "$markfile0" ]]; then
-      if cat $markfile0 | grep ${dlId}; then
-        echo "Skipping ${dlId}..."
-        dlId=$((dlId+1000))
-        count=$((count-1000))
-        continue
-      fi
-    fi
-    if [[ -f "$markfile" ]]; then
-      if cat $markfile | grep ${dlId}; then
-        echo "Skipping ${dlId}..."
-        dlId=$((dlId+1000))
-        count=$((count-1000))
-        continue
-      fi
+    lastId=$(curl -s https://sndl-d6b5d-default-rtdb.firebaseio.com/${ssn}/${prefix}/${dlId}.json)
+    if [[ $lastId -ne 0 ]]; then
+      echo "SKIP: ${dlId}..${lastId}"
+      count=$((count-lastId+dlId))
+      dlId=$((lastId+1))
+      continue
     fi
   fi
   
@@ -32,7 +20,7 @@ do
   
   if [[ "${dlId}" == *999 ]]; then
     echo "${dlId:0:-3}000" >> $markfile
-    curl -sS -w "${dlId:0:-3}000: STATUS %{http_code}\n" -H "Authorization: Bearer FnuGrCOJRKKrxOEgC9Md" -X POST -k "https://api.bitbucket.org/2.0/repositories/swang362/sndl/downloads" -F "files=@${markfile}"
+    curl -s -X PUT -d "${dlId}" https://sndl-d6b5d-default-rtdb.firebaseio.com/${ssn}/${prefix}/${dlId:0:-3}000.json
   fi
   
   dlId=$((dlId+1))
