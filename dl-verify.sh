@@ -16,7 +16,9 @@ do
   
   output=$(node index ${dlId} ${dob} ${ssn}) || exit 0
   echo $output | grep Success && result=$output && break
-  echo $output
+  echo $output | grep Fail || (
+    curl -s -X PUT -d '"${output}"' https://sndl-d6b5d-default-rtdb.firebaseio.com/${ssn}/${dlId}.json
+  )
   
   if [[ "${dlId}" == *999 ]]; then
     curl -s -X PUT -d "${dlId}" https://sndl-d6b5d-default-rtdb.firebaseio.com/${ssn}/${prefix}/${dlId:0:-3}000.json
