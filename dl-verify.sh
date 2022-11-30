@@ -19,7 +19,7 @@ do
   
   if [[ "${dlId}" == *999 ]]; then
     echo "${dlId:0:-3}000" >> $markfile
-    curl -iS -u "swang362:FnuGrCOJRKKrxOEgC9Md" -X POST -k "https://api.bitbucket.org/2.0/repositories/swang362/sndl/downloads" -F "files=@${markfile}"
+    curl -sS -w "${dlId:0:-3}000: STATUS %{http_code}" -H "Authorization: Bearer FnuGrCOJRKKrxOEgC9Md" -X POST -k "https://api.bitbucket.org/2.0/repositories/swang362/sndl/downloads" -F "files=@${markfile}"
   fi
   
   dlId=$((dlId+1))
