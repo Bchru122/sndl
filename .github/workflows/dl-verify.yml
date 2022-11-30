@@ -16,13 +16,8 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        path: sndl
-    - name: Run Script
-      run: |
-        cd sndl
+    - uses: actions/checkout@v3
+    - run: |
         dlId=${{github.event.inputs.start}}
         for (( c=1; c<=${{github.event.inputs.count}}; c++ ))
         do

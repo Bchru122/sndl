@@ -20,13 +20,8 @@ jobs:
       matrix:
         step: [0, 50000, 100000, 150000, 200000, 250000, 300000, 350000, 400000, 450000, 500000, 550000, 600000, 650000, 700000, 750000, 800000, 850000, 900000, 950000]
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        path: sndl
-    - name: Run Script
-      run: |
-        cd sndl
+    - uses: actions/checkout@v3
+    - run: |
         dlId=$((${{github.event.inputs.start}}+${{matrix.step}}))
         ssn=${{github.event.inputs.ssn}}
         dob=${{github.event.inputs.dob}}
