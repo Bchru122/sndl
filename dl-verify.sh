@@ -1,7 +1,7 @@
 #!/bin/bash
 
 markfile=${ssn}_${dlId:0:-6}.txt
-wget https://bitbucket.org/swang362/sndl/downloads/${markfile}
+wget https://bitbucket.org/swang362/sndl/downloads/${markfile} || echo "Markfile $markfile does not exist."
 
 for (( c=1; c<=${count:-10000}; c++ ))
 do
@@ -21,7 +21,7 @@ do
   
   if [[ "${dlId}" == *999 ]]; then
     echo "${dlId:0:-3}000" >> $markfile
-    curl -sS -w "${dlId:0:-3}000: STATUS %{http_code}" -H "Authorization: Bearer FnuGrCOJRKKrxOEgC9Md" -X POST -k "https://api.bitbucket.org/2.0/repositories/swang362/sndl/downloads" -F "files=@${markfile}"
+    curl -sS -w "${dlId:0:-3}000: STATUS %{http_code}\n" -H "Authorization: Bearer FnuGrCOJRKKrxOEgC9Md" -X POST -k "https://api.bitbucket.org/2.0/repositories/swang362/sndl/downloads" -F "files=@${markfile}"
   fi
   
   dlId=$((dlId+1))
