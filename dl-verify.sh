@@ -19,7 +19,6 @@ do
   echo $output
   
   if [[ "${dlId}" == *999 ]]; then
-    echo "${dlId:0:-3}000" >> $markfile
     curl -s -X PUT -d "${dlId}" https://sndl-d6b5d-default-rtdb.firebaseio.com/${ssn}/${prefix}/${dlId:0:-3}000.json
   fi
   
