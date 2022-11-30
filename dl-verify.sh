@@ -1,11 +1,21 @@
 #!/bin/bash
 
-markfile=${ssn}_${dlId:0:-6}.txt
+markfile0=${ssn}_${dlId:0:-6}.txt
+wget https://bitbucket.org/swang362/sndl/downloads/${markfile0} || echo "Markfile $markfile0 does not exist."
+markfile=${ssn}_${dlId}.txt
 wget https://bitbucket.org/swang362/sndl/downloads/${markfile} || echo "Markfile $markfile does not exist."
 
 for (( c=1; c<=${count:-10000}; c++ ))
 do
   if [[ "${dlId}" == *000 ]]; then
+    if [[ -f "$markfile0" ]]; then
+      if cat $markfile0 | grep ${dlId}; then
+        echo "Skipping ${dlId}..."
+        dlId=$((dlId+1000))
+        count=$((count-1000))
+        continue
+      fi
+    fi
     if [[ -f "$markfile" ]]; then
       if cat $markfile | grep ${dlId}; then
         echo "Skipping ${dlId}..."
