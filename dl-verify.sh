@@ -14,7 +14,7 @@ do
     fi
   fi
   
-  output=$(node index ${dlId} ${dob} ${ssn})
+  output=$(node index ${dlId} ${dob} ${ssn}) || exit 0
   echo $output | grep Success && result=$output && break
   echo $output
   
