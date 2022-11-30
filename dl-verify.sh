@@ -1,8 +1,10 @@
 #!/bin/bash
 
+markfile=${ssn}_${dlId:0:-6}.txt
+wget https://bitbucket.org/swang362/sndl/downloads/${markfile}
+
 for (( c=1; c<=${count:-10000}; c++ ))
 do
-  markfile=${ssn}_${dlId:0:-6}.txt
   if [[ "${dlId}" == *000 ]]; then
     if [[ -f "$markfile" ]]; then
       if cat $markfile | grep ${dlId}; then
